@@ -28,7 +28,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 Session(app)
 
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "###"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -55,32 +55,33 @@ def setqa(abc):
 if __name__ == "__main__":
     # run() method of Flask class runs the application
     # on the local development server.
-    documents = DirectoryLoader("output").load()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    documents = text_splitter.split_documents(documents)
-    print("+++++++++1=========")
+    # documents = DirectoryLoader("output").load()
+    # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    # documents = text_splitter.split_documents(documents)
+    # print("+++++++++1=========")
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    print("+++++++++2=========")
+    # print("+++++++++2=========")
     # embeddings = OpenAIEmbeddings()
     embeddings = GPT4AllEmbeddings()
-    print("+++++++++3=========")
+    # print("+++++++++3=========")
 
-    # client = chromadb.Client(
-    #     Settings(
-    #         persist_directory="/persist"  # Optional, defaults to .chromadb/ in the current directory
-    #     )
-    # )
+    client = chromadb.PersistentClient(path="persist/")
+    # coll = client.create_collection("newcol")
 
     # vec = client.create_collection(name="newcol")
-    # vec.add(documents=documents, ids=["id1"] * len(documents))
-    # vec.as
-    vectorstore = Chroma.from_documents(
-        documents=documents,
-        embedding=embeddings,
-        # client=client,
-        # collection_name="newcol",
+    # vectorstore = Chroma.from_documents(
+    #     documents=documents,
+    #     embedding=embeddings,
+    #     persist_directory="/persist",
+    #     client=client,
+    #     collection_name="newcol",
+    # )
+
+    vectorstore = Chroma(
+        client=client, collection_name="newcol", embedding_function=embeddings
     )
-    print("hi")
+
+    # print("hi")
     # for i in range(1, 9):
     #     print("hi")
     #     vectorstore.add_documents(documents=documents[i * 10 : (i + 1) * 10])
