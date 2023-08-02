@@ -1,5 +1,3 @@
-# Importing flask module in the project is mandatory
-# An object of Flask class is our WSGI application.
 from flask import Flask, session, request, jsonify
 from flask_cors import CORS, cross_origin
 import os
@@ -17,6 +15,7 @@ import chromadb
 from chromadb.config import Settings
 import time
 from langchain.embeddings import GPT4AllEmbeddings
+from gpt4all import GPT4All
 
 # Flask constructor takes the name of
 # current module (__name__) as argument.
@@ -29,12 +28,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 Session(app)
 
 
-# The route() function of the Flask class is a decorator,
-# which tells the application which URL should call
-# the associated function.
-
-
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -67,7 +61,7 @@ if __name__ == "__main__":
     print("+++++++++1=========")
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     print("+++++++++2=========")
-    embeddings = OpenAIEmbeddings()
+    # embeddings = OpenAIEmbeddings()
     embeddings = GPT4AllEmbeddings()
     print("+++++++++3=========")
 
@@ -81,18 +75,19 @@ if __name__ == "__main__":
     # vec.add(documents=documents, ids=["id1"] * len(documents))
     # vec.as
     vectorstore = Chroma.from_documents(
-        documents=documents[0:100],
+        documents=documents,
         embedding=embeddings,
         # client=client,
         # collection_name="newcol",
     )
     print("hi")
-    for i in range(1, 9):
-        print("hi")
-        vectorstore.add_documents(documents=documents[i * 10 : (i + 1) * 10])
-    vectorstore.aadd_documents(documents=documents[900:])
+    # for i in range(1, 9):
+    #     print("hi")
+    #     vectorstore.add_documents(documents=documents[i * 10 : (i + 1) * 10])
+    # vectorstore.aadd_documents(documents=documents[900:])
     print("+++++++++4=========")
     llm = OpenAI(temperature=0.9, model="text-davinci-003")
+    # llm = GPT4All(model="wizardlm-13b-v1.1-superhot-8k.ggmlv3.q4_0.bin", n_threads=8)
     print("+++++++++5=========")
     qa = ConversationalRetrievalChain.from_llm(
         llm,

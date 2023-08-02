@@ -1,0 +1,6 @@
+chromadb==0.4.2
+Flask==2.3.2
+Flask_Cors==4.0.0
+gpt4all==1.0.8
+langchain==0.0.250
+openai==0.27.2
