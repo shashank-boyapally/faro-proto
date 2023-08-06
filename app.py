@@ -66,7 +66,7 @@ session_manager={}
 @app.route("/ask", methods=["GET"])
 def hello_world():
     qa=None
-    session_id=request.args.get("uuid")
+    session_id=request.headers.get("uuid")
     if session_id not in session_manager:
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
         llm = OpenAI(temperature=0.9, model="text-davinci-003")
