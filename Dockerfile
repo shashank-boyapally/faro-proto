@@ -1,6 +1,6 @@
 FROM amd64/ubuntu
 
-ENV OPENAI_API_KEY=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
+ENV OPENAI_API_KEY=<OPENAI_API_KEY>
 
 
 WORKDIR /tmp
@@ -17,4 +17,4 @@ RUN pip3 install -r requirements.txt
 
 
 
-CMD ["gunicorn", "-b","0.0.0.0:8000","wsgi:app"]
+CMD ["gunicorn","--keyfile","private_key.pem","--certfile","certificate.pem" "-b","0.0.0.0:8000","wsgi:app"]
